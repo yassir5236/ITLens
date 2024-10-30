@@ -1,12 +1,11 @@
 package org.yassir.itlens.dto.Survey;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.yassir.itlens.validation.UniqueField;
 
-public record CreateSurvey(
+public record SurveyRequest(
+
         @NotBlank(message = "title required")
         @UniqueField
         String title,
@@ -14,7 +13,6 @@ public record CreateSurvey(
         String description,
         @NotNull(message = "ownerId required")
         Long ownerId
-
 
 ) {
 }

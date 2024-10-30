@@ -1,11 +1,15 @@
 package org.yassir.itlens.controller;
 
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.yassir.itlens.dto.Survey.CreateSurvey;
+import org.yassir.itlens.dto.Survey.SurveyRequest;
+import org.yassir.itlens.dto.Survey.SurveyResponse;
 import org.yassir.itlens.service.ISurveyService;
 
 import java.util.List;
@@ -22,22 +26,22 @@ public class SurveyController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateSurvey> createSurvey(@RequestBody CreateSurvey createSurvey) {
-        CreateSurvey createdSurvey = surveyService.createSurvey(createSurvey);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdSurvey);
+    public ResponseEntity<SurveyResponse> createSurvey(@Valid  @RequestBody SurveyRequest surveyRequest) {
+        SurveyResponse surveyResponse = surveyService.createSurvey(surveyRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(surveyResponse);
     }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<CreateSurvey> getSurveyById(@PathVariable Long id) {
+//        CreateSurvey survey = surveyService.getSurveyById(id);
+//        return ResponseEntity.ok(survey);
+//    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CreateSurvey> getSurveyById(@PathVariable Long id) {
-        CreateSurvey survey = surveyService.getSurveyById(id);
-        return ResponseEntity.ok(survey);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<CreateSurvey>> getAllSurveys() {
-        List<CreateSurvey> surveys = surveyService.getAllSurveys();
-        return ResponseEntity.ok(surveys);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<CreateSurvey>> getAllSurveys() {
+//        List<CreateSurvey> surveys = surveyService.getAllSurveys();
+//        return ResponseEntity.ok(surveys);
+//    }
 
 //    @PutMapping("/{id}")
 //    public ResponseEntity<CreateSurvey> updateSurvey(@PathVariable Long id, @RequestBody CreateSurvey createSurvey) {
@@ -49,6 +53,15 @@ public class SurveyController {
     public ResponseEntity<Void> deleteSurvey(@PathVariable Long id) {
         surveyService.deleteSurvey(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errors = new StringBuilder();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("\n");
+        });
+        return ResponseEntity.badRequest().body(errors.toString());
     }
 }
 
