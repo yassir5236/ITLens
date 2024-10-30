@@ -1,5 +1,6 @@
 package org.yassir.itlens.service.Impl;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 //import org.yassir.itlens.mapper.owner.OwnerMapper;
@@ -33,16 +34,30 @@ public class OwnerServiceImpl  implements IOwnerSerice  {
 //    }
 
 
+//    @Override
+//    public OwnerResponse createOwner(OwnerRequest ownerRequest) {
+//        Optional<Owner> existingOwner = ownerRepository.findByName(ownerRequest.name());
+//        if (existingOwner.isPresent()) {
+//            throw new RuntimeException("Owner with name '" + ownerRequest.name() + "' already exists.");
+//        }
+//
+//        Owner owner = ownerMapper.toEntity(ownerRequest);
+//        Owner savedOwner = ownerRepository.save(owner);
+//        return ownerMapper.toOwnerResponse(savedOwner);
+//    }
+
     @Override
     public OwnerResponse createOwner(OwnerRequest ownerRequest) {
-        Optional<Owner> existingOwner = ownerRepository.findByName(ownerRequest.name());
-        if (existingOwner.isPresent()) {
+        // Pas besoin de vérifier l'unicité ici
+        Owner owner = ownerMapper.toEntity(ownerRequest);
+
+        // Sauvegarder le propriétaire
+        try {
+            Owner savedOwner = ownerRepository.save(owner);
+            return ownerMapper.toOwnerResponse(savedOwner);
+        } catch (ConstraintViolationException e) {
             throw new RuntimeException("Owner with name '" + ownerRequest.name() + "' already exists.");
         }
-
-        Owner owner = ownerMapper.toEntity(ownerRequest);
-        Owner savedOwner = ownerRepository.save(owner);
-        return ownerMapper.toOwnerResponse(savedOwner);
     }
 
     @Override

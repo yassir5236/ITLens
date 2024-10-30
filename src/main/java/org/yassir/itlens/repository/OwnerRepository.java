@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface OwnerRepository extends CrudRepository<Owner, Long> {
-    Optional<Owner> findByName(String name);
+    Optional<Owner> findFirstByName(String name);
 
 }
