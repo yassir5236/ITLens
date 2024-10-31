@@ -1,7 +1,6 @@
 package org.yassir.itlens.mapper.survey;
 
 import org.mapstruct.Mapper;
-import org.yassir.itlens.dto.Survey.CreateSurvey;
 import org.yassir.itlens.dto.Survey.SurveyRequest;
 import org.yassir.itlens.dto.Survey.SurveyResponse;
 import org.yassir.itlens.dto.Survey.SurveyUpdate;

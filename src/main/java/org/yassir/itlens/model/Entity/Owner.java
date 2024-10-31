@@ -25,10 +25,9 @@ public class Owner implements Serializable {
     private Long id;
     @NotNull(message = "name is required")
     @Column(name = "name", nullable = false)
-//    @UniqueField
     private String name;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Survey> surveys = new ArrayList<>();
 
 }

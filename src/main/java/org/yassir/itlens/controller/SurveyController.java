@@ -7,12 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.yassir.itlens.dto.Survey.CreateSurvey;
 import org.yassir.itlens.dto.Survey.SurveyRequest;
 import org.yassir.itlens.dto.Survey.SurveyResponse;
+import org.yassir.itlens.dto.Survey.SurveyUpdate;
 import org.yassir.itlens.service.ISurveyService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/surveys")
@@ -43,11 +41,11 @@ public class SurveyController {
 //        return ResponseEntity.ok(surveys);
 //    }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<CreateSurvey> updateSurvey(@PathVariable Long id, @RequestBody CreateSurvey createSurvey) {
-//        CreateSurvey updatedSurvey = surveyService.updateSurvey(id, createSurvey); // Uncomment and adjust in your service
-//        return ResponseEntity.ok(updatedSurvey);
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<SurveyResponse> updateSurvey(@PathVariable Long id,@Valid  @RequestBody SurveyUpdate surveyUpdate) {
+        SurveyResponse updatedSurvey = surveyService.updateSurvey(id, surveyUpdate);
+        return ResponseEntity.ok(updatedSurvey);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSurvey(@PathVariable Long id) {

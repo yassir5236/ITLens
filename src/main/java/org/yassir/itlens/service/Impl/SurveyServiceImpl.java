@@ -1,24 +1,19 @@
 package org.yassir.itlens.service.Impl;
 
 
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.yassir.itlens.dto.Owner.OwnerRequest;
 import org.yassir.itlens.dto.Owner.OwnerResponse;
-import org.yassir.itlens.dto.Survey.CreateSurvey;
+import org.yassir.itlens.dto.Owner.OwnerUpdate;
 import org.yassir.itlens.dto.Survey.SurveyRequest;
 import org.yassir.itlens.dto.Survey.SurveyResponse;
+import org.yassir.itlens.dto.Survey.SurveyUpdate;
 import org.yassir.itlens.mapper.survey.SurveyMapper;
 import org.yassir.itlens.model.Entity.Owner;
 import org.yassir.itlens.model.Entity.Survey;
 import org.yassir.itlens.repository.ISurveyRepository;
 import org.yassir.itlens.repository.OwnerRepository;
 import org.yassir.itlens.service.ISurveyService;
-
-import java.util.stream.Collectors;
-
-import java.util.List;
 
 @Service
 public class SurveyServiceImpl implements ISurveyService {
@@ -50,12 +45,12 @@ public class SurveyServiceImpl implements ISurveyService {
 
 
 
-//    @Override
-//    public CreateSurvey getSurveyById(Long id) {
-//        Survey survey = surveyRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Survey not found with id " + id));
-//        return surveyMapper.toDto(survey);
-//    }
+    @Override
+    public SurveyResponse getSurveyById(Long id) {
+        Survey survey = surveyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Survey not found with id " + id));
+        return surveyMapper.toSurveyResponse(survey);
+    }
 
 //    @Override
 //    public List<CreateSurvey> getAllSurveys() {
@@ -63,13 +58,27 @@ public class SurveyServiceImpl implements ISurveyService {
 //                .map(surveyMapper::toDto)
 //                .collect(Collectors.toList());
 //    }
-//    @Override
-//    public CreateSurvey updateSurvey(Long id, CreateSurvey createSurvey) {
-//        CreateSurvey existingSurvey = getSurveyById(id);
-//        surveyMapper.updateSurveyFromRequest(createSurvey, existingSurvey);
-//        return surveyRepository.save(existingSurvey);
-//    }
-//
+@Override
+public SurveyResponse updateSurvey(Long id, SurveyUpdate surveyUpdate) {
+    Survey existingSurvey = surveyRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Survey not found with id " + id));
+    Owner owner = ownerRepository.findById(surveyUpdate.ownerId())
+            .orElseThrow(() -> new RuntimeException("Owner not found with id " + surveyUpdate.ownerId()));
+
+
+    existingSurvey.setDescription(surveyUpdate.description());
+    existingSurvey.setTitle(surveyUpdate.title());
+    existingSurvey.setOwner(owner);
+
+    Survey updatedSurvey = surveyRepository.save(existingSurvey);
+    return surveyMapper.toSurveyResponse(updatedSurvey);
+}
+
+
+
+
+
+
     @Override
     public void deleteSurvey(Long id) {
         surveyRepository.deleteById(id);
