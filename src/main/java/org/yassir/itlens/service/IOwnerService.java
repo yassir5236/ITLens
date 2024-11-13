@@ -1,5 +1,6 @@
 package org.yassir.itlens.service;
 
+import org.springframework.stereotype.Service;
 import org.yassir.itlens.dto.Owner.OwnerRequest;
 import org.yassir.itlens.dto.Owner.OwnerResponse;
 import org.yassir.itlens.dto.Owner.OwnerUpdate;

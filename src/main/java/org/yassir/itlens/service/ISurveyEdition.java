@@ -14,9 +14,9 @@ public interface ISurveyEdition {
 
     SurveyEditionResponse getSurveyEditionById(Long id);
 
-//    List<SurveyEditionResponse> getAllSurveyEditions();
+    List<SurveyEditionResponse> getAllSurveyEditions();
 
-//    SurveyEditionResponse updateSurveyEdition(Long id, SurveyEditionUpdate surveyUpdate);
+    SurveyEditionResponse updateSurveyEdition(Long id, SurveyEditionUpdate surveyUpdate);
 
     void deleteSurveyEdition(Long id);
 }

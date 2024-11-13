@@ -14,14 +14,20 @@ import java.io.Serializable;
 @Getter
 @ToString
 
+
+
 public class Answer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String text ;
-    private int selectionCount ;
 
-    @ManyToOne
-    @JoinColumn(name="question_id")
-    private Question question ;
+    @Column(nullable = false)
+    private String text;
+
+    @Column(nullable = false)
+    private int selectionCount;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="question_id", nullable = false)
+    private Question question;
 }

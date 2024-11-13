@@ -23,6 +23,7 @@ public class Owner implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull(message = "name is required")
     @Column(name = "name", nullable = false)
     private String name;

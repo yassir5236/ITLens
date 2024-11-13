@@ -48,7 +48,8 @@ public class OwnerServiceImpl implements IOwnerService {
     @Override
     public OwnerResponse updateOwner(Long ownerId, OwnerUpdate ownerUpdate) {
 
-        Owner existingOwner = ownerRepository.findById(ownerId).orElseThrow(() -> new RuntimeException("Owner not found"));
+        Owner existingOwner = ownerRepository.findById(ownerId)
+                .orElseThrow(() -> new RuntimeException("Owner not found"));
 
         existingOwner.setName(ownerUpdate.name());
         Owner updatedOwner = ownerRepository.save(existingOwner);

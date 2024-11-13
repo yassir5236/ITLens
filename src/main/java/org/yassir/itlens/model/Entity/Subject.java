@@ -7,27 +7,30 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name= "subjects")
+@Table(name = "subjects")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @ToString
 
-public class Subject  implements Serializable {
+public class Subject implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    String title ;
+
+    @Column(nullable = false)
+    String title;
 
     @ManyToOne
     @JoinColumn(name = "surveyEdition_id")
     private SurveyEdition surveyEdition;
 
-    @OneToMany(mappedBy = "subject")
-    private List<SubSubject> subSubjects ;
+    //    @OneToMany(mappedBy = "subject")
+    @OneToMany(mappedBy = "subject", fetch = FetchType.EAGER)
 
+    private List<SubSubject> subSubjects;
 
 
 }
