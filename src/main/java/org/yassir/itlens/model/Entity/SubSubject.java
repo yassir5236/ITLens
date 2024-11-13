@@ -16,13 +16,16 @@ public class SubSubject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
 
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    @OneToMany(mappedBy = "subSubject")
+    @OneToMany(mappedBy = "subSubject", fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "subSubject")
     private List<Question> questions;
 
 }

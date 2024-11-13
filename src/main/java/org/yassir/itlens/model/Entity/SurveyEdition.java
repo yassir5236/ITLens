@@ -21,18 +21,25 @@ public class SurveyEdition implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    LocalDate creationDate;
-    LocalDate startDate;
-    LocalDate endDate;
-    int year;
+
+    @Column(nullable = false)
+    private LocalDate creationDate;
+
+    @Column(nullable = false)
+    private LocalDate startDate;
+
+    @Column(nullable = false)
+    private LocalDate endDate;
+
+    @Column(nullable = false)
+    private int year;
 
     @ManyToOne
     @JoinColumn(name = "survey_id")
-    private  Survey survey;
+    private Survey survey;
 
     @OneToMany(mappedBy = "surveyEdition")
     private List<Subject> subjects;
-
 
 
 }

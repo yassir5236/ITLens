@@ -48,7 +48,7 @@ public class OwnerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<OwnerResponse> updateOwner(
-           @Valid @PathVariable Long id,
+            @IdExist(message = "owner noooot found") @PathVariable Long id,
             @Valid @RequestBody OwnerUpdate ownerUpdate
     ) {
         OwnerResponse updatedOwner = ownerService.updateOwner(id, ownerUpdate);
@@ -69,14 +69,17 @@ public class OwnerController {
    }
 
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-//        StringBuilder errors = new StringBuilder();
-//        ex.getBindingResult().getFieldErrors().forEach(error -> {
-//            errors.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("\n");
-//        });
-//        return ResponseEntity.badRequest().body(errors.toString());
-//    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errors = new StringBuilder();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("\n");
+        });
+        return ResponseEntity.badRequest().body(errors.toString());
+    }
+
+
 
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -88,7 +91,6 @@ public class OwnerController {
 
         return ResponseEntity.badRequest().body(errorMessage);
     }
-
 
 
 }

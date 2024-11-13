@@ -2,10 +2,13 @@ package org.yassir.itlens.mapper.owner;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import org.yassir.itlens.dto.Owner.OwnerRequest;
 import org.yassir.itlens.dto.Owner.OwnerResponse;
 import org.yassir.itlens.dto.Owner.OwnerUpdate;
 import org.yassir.itlens.dto.Survey.SurveyResponse;
+import org.yassir.itlens.dto.SurveyEdition.SurveyEditionResponse;
+import org.yassir.itlens.mapper.SurveyEdition.SurveyEditionMapper;
 import org.yassir.itlens.model.Entity.Owner;
 import org.yassir.itlens.model.Entity.Survey;
 
@@ -13,6 +16,9 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface OwnerMapper {
+
+    SurveyEditionMapper surveyEditionMapper = Mappers.getMapper(SurveyEditionMapper.class); // Ajoutez cette ligne
+
 
     Owner toEntity(OwnerRequest ownerRequest);
     OwnerRequest toOwnerRequest(Owner owner);
@@ -24,19 +30,20 @@ public interface OwnerMapper {
     OwnerUpdate toOwnerUpdate(Owner owner);
 
 
-    // Mapper Survey en SurveyResponse
     default SurveyResponse toSurveyResponse(Survey survey) {
-        return new SurveyResponse(survey.getId(), survey.getTitle(), survey.getDescription());
+        List<SurveyEditionResponse> surveyEditionResponses = survey.getSurveyEditions().stream()
+                .map(surveyEditionMapper::toResponse)
+                .toList();
+
+        return new SurveyResponse(survey.getId(), survey.getDescription(), survey.getTitle(), surveyEditionResponses);
     }
 
-    // Conversion de la liste de Survey en liste de SurveyResponse
     default List<SurveyResponse> toSurveyResponses(List<Survey> surveys) {
         return surveys.stream()
                 .map(this::toSurveyResponse)
                 .toList();
     }
 
-    // Mapper Owner vers OwnerResponse avec les SurveyResponse
     default OwnerResponse toOwnerResponseWithSurveys(Owner owner) {
         return new OwnerResponse(
                 owner.getId(),

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,7 +33,7 @@ public class Survey implements Serializable {
     @JoinColumn(name="owner_id")
     private Owner owner;
 
-    @OneToMany(mappedBy = "survey")
-    private List<SurveyEdition> surveyEdition;
+    @OneToMany(mappedBy = "survey" , cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SurveyEdition> surveyEditions =new ArrayList<>();
 
 }
