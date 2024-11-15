@@ -60,11 +60,11 @@ public class OwnerServiceImpl implements IOwnerService {
     @Override
     public List<OwnerResponse> getAllOwners() {
         Iterable<Owner> ownersIterable = ownerRepository.findAll();
-        List<OwnerResponse> ownersList = new ArrayList<>(); // Create List<OwnerResponse>
+        List<OwnerResponse> ownersList = new ArrayList<>();
 
         ownersIterable.forEach(owner -> {
-            OwnerResponse response = ownerMapper.toOwnerResponse(owner); // Map Owner to OwnerResponse
-            ownersList.add(response); // Add the mapped response to the list
+            OwnerResponse response = ownerMapper.toOwnerResponse(owner);
+            ownersList.add(response);
         });
 
         return ownersList;

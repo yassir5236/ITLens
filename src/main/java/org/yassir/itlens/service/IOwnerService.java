@@ -9,8 +9,12 @@ import java.util.List;
 
 public interface IOwnerService {
     OwnerResponse createOwner(OwnerRequest ownerRequest);
-     OwnerResponse getOwnerById(Long ownerId) ;
-     OwnerResponse updateOwner(Long id, OwnerUpdate ownerUpdate);
-     List<OwnerResponse> getAllOwners() ;
-     void deleteOwner(Long ownerId);
-    }
+
+    OwnerResponse getOwnerById(Long ownerId);
+
+    OwnerResponse updateOwner(Long id, OwnerUpdate ownerUpdate);
+
+    List<OwnerResponse> getAllOwners();
+
+    void deleteOwner(Long ownerId);
+}
