@@ -14,7 +14,7 @@ public interface AnswerMapper {
     default Answer toAnswer(AnswerRequest answerRequest, Question question) {
         Answer answer = new Answer();
         answer.setText(answerRequest.text());
-        answer.setSelectionCount(answerRequest.selectionCount());
+//        answer.setSelectionCount(answerRequest.selectionCount());
         answer.setQuestion(question);
         return answer;
     }

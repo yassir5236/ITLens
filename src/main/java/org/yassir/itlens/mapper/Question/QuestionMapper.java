@@ -18,6 +18,7 @@ public interface QuestionMapper {
     default Question toQuestion(QuestionRequest questionRequest, SubSubject subSubject) {
         Question question = new Question();
         question.setText(questionRequest.text());
+        question.setType(questionRequest.questionType());
         question.setSubSubject(subSubject);
         question.setAnswerCount(questionRequest.answerCount());
         question.setType(questionRequest.questionType());
@@ -34,6 +35,7 @@ public interface QuestionMapper {
         return new QuestionResponse(
                 question.getId(),
                 question.getText(),
+                question.getType(),
                 question.getAnswerCount(),
                 answerResponses
         );

@@ -11,9 +11,6 @@ public record AnswerRequest(
         String text,
 
         @Column(nullable = false)
-        int selectionCount,
-
-        @Column(nullable = false)
         @IdExist(message = "questionId not found ")
         Long questionId
 ) {

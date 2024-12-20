@@ -11,6 +11,7 @@ import org.yassir.itlens.dto.Question.QuestionResponse;
 import org.yassir.itlens.dto.Question.QuestionUpdate;
 import org.yassir.itlens.dto.Question.QuestionRequest;
 import org.yassir.itlens.dto.Question.QuestionResponse;
+import org.yassir.itlens.dto.QuestionWithAnswersRequest;
 import org.yassir.itlens.service.Impl.QuestionServiceImpl;
 import org.yassir.itlens.validation.IdExist;
 
@@ -34,11 +35,15 @@ public class QuestionController {
     }
 
 
-
+    //    @GetMapping("/{id}")
+//    public ResponseEntity<QuestionResponse> getQuestionById(@IdExist(message = "question noooot found") @PathVariable Long id) {
+//        QuestionResponse questionResponse = questionService.getQuestionById(id);
+//        return ResponseEntity.ok(questionResponse);
+//    }
     @GetMapping("/{id}")
-    public ResponseEntity<QuestionResponse> getQuestionById(@IdExist(message = "question noooot found") @PathVariable Long id) {
-        QuestionResponse questionResponse = questionService.getQuestionById(id);
-        return ResponseEntity.ok(questionResponse);
+    public ResponseEntity<QuestionResponse> getQuestionById(@PathVariable Long id) {
+        QuestionResponse response = questionService.getQuestionById(id);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
@@ -64,15 +69,6 @@ public class QuestionController {
     }
 
 
-
-
-
-
-
-
-
-
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         StringBuilder errors = new StringBuilder();
@@ -83,8 +79,6 @@ public class QuestionController {
     }
 
 
-
-
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
         String errorMessage = ex.getConstraintViolations().stream()
@@ -93,6 +87,12 @@ public class QuestionController {
                 .orElse("Erreur de validation");
 
         return ResponseEntity.badRequest().body(errorMessage);
+    }
+
+    @PostMapping("/create-with-answers")
+    public ResponseEntity<QuestionResponse> createQuestionWithAnswers(@RequestBody QuestionWithAnswersRequest request) {
+        QuestionResponse response = questionService.createQuestionWithAnswers(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 }

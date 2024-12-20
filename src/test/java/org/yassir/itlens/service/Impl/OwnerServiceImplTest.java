@@ -8,6 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.yassir.itlens.dto.Owner.EmbeddedOwner;
 import org.yassir.itlens.dto.Owner.OwnerRequest;
 import org.yassir.itlens.dto.Owner.OwnerResponse;
@@ -49,7 +53,6 @@ class OwnerServiceImplTest {
         savedOwner.setId(1L);
         savedOwner.setName("John Doe");
 
-        // Match the expected type with the service's return type
         OwnerResponse expectedResponse = new OwnerResponse(1L, "John Doe", new ArrayList<>());
 
         when(ownerMapper.toEntity(ownerRequest)).thenReturn(owner);
@@ -133,7 +136,7 @@ class OwnerServiceImplTest {
     }
 
     @Test
-    void getAllOwners_ShouldReturnListOfOwnerResponses() {
+    void getAllOwners_ShouldReturnPagedListOfOwnerResponses() {
         Owner owner1 = new Owner();
         owner1.setId(1L);
         owner1.setName("Owner 1");
@@ -146,17 +149,23 @@ class OwnerServiceImplTest {
         OwnerResponse response1 = new OwnerResponse(1L, "Owner 1", new ArrayList<>());
         OwnerResponse response2 = new OwnerResponse(2L, "Owner 2", new ArrayList<>());
 
-        when(ownerRepository.findAll()).thenReturn(owners);
+        int page = 0;
+        int size = 2;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Owner> ownersPage = new PageImpl<>(owners, pageable, owners.size());
+
+        when(ownerRepository.findAll(pageable)).thenReturn(ownersPage);
         when(ownerMapper.toOwnerResponse(owner1)).thenReturn(response1);
         when(ownerMapper.toOwnerResponse(owner2)).thenReturn(response2);
 
-        List<OwnerResponse> responses = ownerService.getAllOwners();
+        Page<OwnerResponse> responses = ownerService.getAllOwners(page, size);
 
         assertNotNull(responses);
-        assertEquals(2, responses.size());
-        assertEquals(Arrays.asList(response1, response2), responses);
+        assertEquals(2, responses.getContent().size());
+        assertEquals(response1, responses.getContent().get(0));
+        assertEquals(response2, responses.getContent().get(1));
 
-        verify(ownerRepository).findAll();
+        verify(ownerRepository).findAll(pageable);
         verify(ownerMapper).toOwnerResponse(owner1);
         verify(ownerMapper).toOwnerResponse(owner2);
     }

@@ -18,6 +18,7 @@ import org.yassir.itlens.model.Entity.Answer;
 import org.yassir.itlens.model.Entity.Owner;
 import org.yassir.itlens.model.Entity.Question;
 import org.yassir.itlens.model.Entity.Survey;
+import org.yassir.itlens.model.Enum.QuestionType;
 import org.yassir.itlens.repository.IAnswerRepository;
 import org.yassir.itlens.repository.IQuestionRepository;
 import org.yassir.itlens.repository.ISurveyRepository;
@@ -102,6 +103,29 @@ public class SurveyServiceImpl implements ISurveyService {
     }
 
 
+//    @Transactional
+//    @Override
+//    public void participateInSurvey(Long surveyId, ParticipationRequest participationRequest) {
+//        for (Response response : participationRequest.responses()) {
+//            Question question = questionRepository.findById(response.questionId())
+//                    .orElseThrow(() -> new EntityNotFoundException("Question not found with id " + response.questionId()));
+//
+//            for (AnswerPayload answerPayload : response.answers()) {
+//                Answer answer = answerRepository.findById(answerPayload.answerId())
+//                        .orElseThrow(() -> new EntityNotFoundException("Answer not found with id " + answerPayload.answerId()));
+//
+////                question.setAnswerCount(question.getAnswerCount() + 1);
+////                questionRepository.save(question);
+//
+//
+//
+//                answer.setSelectionCount(answer.getSelectionCount() + 1);
+//                answerRepository.save(answer);
+//            }
+//        }
+//    }
+
+
     @Transactional
     @Override
     public void participateInSurvey(Long surveyId, ParticipationRequest participationRequest) {
@@ -109,45 +133,35 @@ public class SurveyServiceImpl implements ISurveyService {
             Question question = questionRepository.findById(response.questionId())
                     .orElseThrow(() -> new EntityNotFoundException("Question not found with id " + response.questionId()));
 
-            for (AnswerPayload answerPayload : response.answers()) {
-                Answer answer = answerRepository.findById(answerPayload.answerId())
-                        .orElseThrow(() -> new EntityNotFoundException("Answer not found with id " + answerPayload.answerId()));
+            if (question.getType() == QuestionType.CHOIX_UNIQUE) {
+                if (response.answers().size() != 1) {
+                    throw new IllegalArgumentException("Only one answer is allowed for a single-choice question");
+                }
 
-                question.setAnswerCount(question.getAnswerCount() + 1);
-                questionRepository.save(question);
+                AnswerPayload singleAnswerPayload = response.answers().get(0);
+
+                Answer answer = answerRepository.findById(singleAnswerPayload.answerId())
+                        .orElseThrow(() -> new EntityNotFoundException("Answer not found with id " + singleAnswerPayload.answerId()));
 
                 answer.setSelectionCount(answer.getSelectionCount() + 1);
+                question.setAnswerCount(question.getAnswerCount() + 1);
+
                 answerRepository.save(answer);
+
+            } else {
+                for (AnswerPayload answerPayload : response.answers()) {
+                    Answer answer = answerRepository.findById(answerPayload.answerId())
+                            .orElseThrow(() -> new EntityNotFoundException("Answer not found with id " + answerPayload.answerId()));
+
+                    answer.setSelectionCount(answer.getSelectionCount() + 1);
+                    answerRepository.save(answer);
+                }
             }
         }
     }
 
 
 
-//    public void participateInSurvey(Long surveyId, ParticipationRequest participationRequest) {
-//        // 1. Vérification du sondage
-//        Survey survey = surveyRepository.findById(surveyId)
-//                .orElseThrow(() -> new EntityNotFoundException("Survey not found with id " + surveyId));
-//
-//        // 2. Parcourir les réponses de l'utilisateur
-//        for (Response response : participationRequest.responses()) {
-//            Long questionId = response.questionId();
-//
-//            Question question = questionRepository.findByIdAndSurveyId(questionId, surveyId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Question " + questionId + " not found in survey " + surveyId));
-//
-//            for (AnswerPayload answerPayload : response.answers()) {
-//                Long answerId = answerPayload.answerId();
-//
-//                Answer answer = answerRepository.findByIdAndQuestionId(answerId, questionId)
-//                        .orElseThrow(() -> new EntityNotFoundException("Answer " + answerId + " not found for question " + questionId));
-//
-//                // Incrémenter le nombre de sélections pour cette réponse (optionnel)
-//                answer.setSelectionCount(answer.getSelectionCount() + 1);
-//                answerRepository.save(answer);
-//            }
-//        }
-//    }
 
 }
 

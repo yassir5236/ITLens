@@ -2,6 +2,8 @@ package org.yassir.itlens.service.Impl;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 //import org.yassir.itlens.mapper.owner.OwnerMapper;
 import org.yassir.itlens.dto.Owner.OwnerRequest;
@@ -11,6 +13,10 @@ import org.yassir.itlens.mapper.owner.OwnerMapper;
 import org.yassir.itlens.model.Entity.Owner;
 import org.yassir.itlens.repository.OwnerRepository;
 import org.yassir.itlens.service.IOwnerService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,17 +63,25 @@ public class OwnerServiceImpl implements IOwnerService {
         return ownerMapper.toOwnerResponse(updatedOwner);
     }
 
+
+    //        Iterable<Owner> ownersIterable = ownerRepository.findAll();
+//        List<OwnerResponse> ownersList = new ArrayList<>();
+//
+//        ownersIterable.forEach(owner -> {
+//            OwnerResponse response = ownerMapper.toOwnerResponse(owner);
+//            ownersList.add(response);
+//        });
+//
+//        return ownersList;
+
+
     @Override
-    public List<OwnerResponse> getAllOwners() {
-        Iterable<Owner> ownersIterable = ownerRepository.findAll();
-        List<OwnerResponse> ownersList = new ArrayList<>();
+    public Page<OwnerResponse> getAllOwners(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Owner> ownersPage = ownerRepository.findAll(pageable);
+        return ownersPage.map(ownerMapper::toOwnerResponse);
 
-        ownersIterable.forEach(owner -> {
-            OwnerResponse response = ownerMapper.toOwnerResponse(owner);
-            ownersList.add(response);
-        });
 
-        return ownersList;
     }
 
 

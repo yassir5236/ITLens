@@ -9,9 +9,6 @@ public record AnswerUpdate(
         @NotBlank(message = "text is required ")
         String text,
 
-        @Column(nullable = false)
-        int selectionCount,
-
         @IdExist(message = "question with this  Id is not found" )
         Long questionId
 ) {

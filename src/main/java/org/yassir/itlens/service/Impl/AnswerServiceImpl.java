@@ -43,7 +43,9 @@ public class AnswerServiceImpl implements IAnswer {
                 .orElseThrow(() -> new RuntimeException("subSubject not found with this id "));
         Answer answerSaved = answerRepository.save(answerMapper.toAnswer(answerRequest, question));
 
-        question.setAnswerCount(question.getAnswerCount() + 1);
+//        question.setAnswerCount(question.getAnswerCount() + 1);
+//        answerSaved.setSelectionCount(answerSaved.getSelectionCount() + 1);
+
         questionRepository.save(question);
         return answerMapper.toAnswerResponse(answerSaved);
 

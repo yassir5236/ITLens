@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Récupérer le code depuis le repository Git
-                git 'https://votre-url-git-repository.git'
+                git 'https://github.com/yassir5236/ITLens'
             }
         }
 

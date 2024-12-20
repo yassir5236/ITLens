@@ -2,6 +2,9 @@ package org.yassir.itlens.controller;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,11 +58,18 @@ public class OwnerController {
         return ResponseEntity.ok(updatedOwner);
     }
 
-    @GetMapping
-    public ResponseEntity<List<OwnerResponse>> getAllOwners() {
-        List<OwnerResponse> owners = ownerService.getAllOwners();
-        return ResponseEntity.ok(owners);
+//    @GetMapping
+//    public ResponseEntity<List<OwnerResponse>> getAllOwners() {
+//        List<OwnerResponse> owners = ownerService.getAllOwners();
+//        return ResponseEntity.ok(owners);
+//
+//    }
 
+    @GetMapping
+    public Page<OwnerResponse> getAllOwners(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ownerService.getAllOwners(page, size);
     }
 
     @DeleteMapping("/{id}")

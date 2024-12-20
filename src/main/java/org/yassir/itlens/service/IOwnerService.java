@@ -1,6 +1,8 @@
 package org.yassir.itlens.service;
 
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.yassir.itlens.dto.Owner.OwnerRequest;
 import org.yassir.itlens.dto.Owner.OwnerResponse;
 import org.yassir.itlens.dto.Owner.OwnerUpdate;
@@ -14,7 +16,7 @@ public interface IOwnerService {
 
     OwnerResponse updateOwner(Long id, OwnerUpdate ownerUpdate);
 
-    List<OwnerResponse> getAllOwners();
+    Page<OwnerResponse> getAllOwners(int page, int size);
 
     void deleteOwner(Long ownerId);
 }
